@@ -18,4 +18,4 @@ Run the Neo4j Desktop application and create a project. To make this easy, here 
 Run the *create_data.py* file to create the data.
 
 ## Step 5:
-Run the *connection.py* file to see the time each action takes.
+Run the *connection.py* file to see the time each action takes. The password in the connection string should what you gave for your database.
