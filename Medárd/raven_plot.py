@@ -4,7 +4,7 @@ import numpy as np
 from pyravendb.store import document_store
 
 # RavenDB initialization
-store = document_store.DocumentStore(urls=['http://127.0.0.1:50993'], database='TestDatabase')
+store = document_store.DocumentStore(urls=['http://127.0.0.1:60845'], database='TestDatabase')
 store.initialize()
 
 class User:
@@ -94,6 +94,6 @@ plt.tight_layout(rect=[0, 0.03, 1, 0.95])
 plt.subplots_adjust(hspace=0.5)
 
 # Exporting to PNG
-plt.savefig('ravendb_performance.png')
+plt.savefig('Medárd/imgs/ravendb_performance.png')
 
 plt.show()
