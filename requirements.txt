@@ -1,0 +1,9 @@
+cassandra_driver==3.29.1
+matplotlib==3.8.0
+neo4j==5.20.0
+numpy==1.26.4
+pandas==2.2.2
+prettytable==3.10.0
+pymongo==4.7.2
+pyravendb==5.0.0.5
+redis==5.0.5

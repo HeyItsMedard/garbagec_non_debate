@@ -4,7 +4,7 @@ import numpy as np
 from pyravendb.store import document_store
 
 # RavenDB initialization
-store = document_store.DocumentStore(urls=['http://127.0.0.1:60845'], database='TestDatabase')
+store = document_store.DocumentStore(urls=['http://127.0.0.1:60341'], database='TestDatabase')
 store.initialize()
 
 class User:
@@ -70,19 +70,19 @@ worst_delete_time = max(delete_times)
 fig, axes = plt.subplots(3, 1, figsize=(10, 15))
 
 # Writing time
-axes[0].bar(["Best", "Average", "Worst"], [best_write_time, average_write_time, worst_write_time], color='blue')
+axes[0].bar(["Best", "Average", "Worst"], [best_write_time, average_write_time, worst_write_time], color='blue', width=0.5)  # Adjusted width
 axes[0].set_title('Writing Time')
 for i, v in enumerate([best_write_time, average_write_time, worst_write_time]):
     axes[0].text(i, v, "{:.4f} s".format(v), ha='center', va='bottom')
 
 # Reading time
-axes[1].bar(["Best", "Average", "Worst"], [best_read_time, average_read_time, worst_read_time], color='orange')
+axes[1].bar(["Best", "Average", "Worst"], [best_read_time, average_read_time, worst_read_time], color='orange', width=0.5)  # Adjusted width
 axes[1].set_title('Reading Time')
 for i, v in enumerate([best_read_time, average_read_time, worst_read_time]):
     axes[1].text(i, v, "{:.4f} s".format(v), ha='center', va='bottom')
 
 # Deleting time
-axes[2].bar(["Best", "Average", "Worst"], [best_delete_time, average_delete_time, worst_delete_time], color='green')
+axes[2].bar(["Best", "Average", "Worst"], [best_delete_time, average_delete_time, worst_delete_time], color='green', width=0.5)  # Adjusted width
 axes[2].set_title('Deleting Time')
 for i, v in enumerate([best_delete_time, average_delete_time, worst_delete_time]):
     axes[2].text(i, v, "{:.4f} s".format(v), ha='center', va='bottom')

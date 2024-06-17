@@ -1,39 +1,39 @@
 import json
-from pymongo import MongoClient
+import redis
 import pandas as pd
 import time
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 with open("data.json", "r") as f:
     data = json.load(f)
 
+
 users_list = []
-user_dict={}
-user_dict = {}
 for i in range(10000):
-    user_dict[str(data["ids"][i])] = {"_id": data["ids"][i], "name": data["names"][i], "email": data["emails"][i], "age": data["ages"][i]}
+    user = {"id": data["ids"][i], "name": data["names"][i], "email": data["emails"][i], "age": data["ages"][i]}
+    users_list.append(user)
 
-uri = "mongodb+srv://skribaizabella:qByd1uBlOIrcvXIC@probacluster.ukmitfl.mongodb.net/?retryWrites=true&w=majority"
-database_name = "uj_adatbázis_proba"
-collection_name ="uj_collection_proba"
 
-client = MongoClient(uri)
+redis_host = 'localhost'
+redis_port = 6379
+client = redis.StrictRedis(host=redis_host, port=redis_port, decode_responses=True)
 
-db = client[database_name]
-collection = db[collection_name]
-
-def write_to_mongodb(users_dict):
+def write_to_redis(users_list):
     times = []
     delete_times = []
     for _ in range(10):
+        
         delete_start = time.time()
-        db[collection_name].delete_many({})
+        client.flushdb()  
         delete_end = time.time()
         delete_times.append(delete_end - delete_start)
         
+        
         start = time.time()
-        db[collection_name].insert_one(users_dict)
+        for user in users_list:
+            client.set(user['id'], json.dumps(user))  
         end = time.time()
         times.append(end - start)
     
@@ -49,17 +49,22 @@ def write_to_mongodb(users_dict):
 
 def do_query():
     times = []
+    result = []
     for _ in range(10):
         start = time.time()
-        result = list(collection.find({}, {"_id": 0, "name": 1, "email": 1, "age": 1}))
+        
+        keys = client.keys("*")
+        users = [json.loads(client.get(key)) for key in keys]
+        result = users
+      
         end = time.time()
         times.append(end - start)
-
+    
     avg_query_time = np.mean(times)
     max_query_time = max(times)
     min_query_time = min(times)
     
-    df = pd.DataFrame(result, columns=["Name", "Email", "Age"])
+    df = pd.DataFrame(result, columns=["name", "email", "age"])
     
     return df, [avg_query_time, max_query_time, min_query_time]
 
@@ -87,8 +92,6 @@ def plots(time_list_write, time_list_delete, time_list_query):
     plt.tight_layout()
     plt.show()
 
-
-time_list_write, time_list_delete = write_to_mongodb(user_dict)
-
+time_list_write, time_list_delete = write_to_redis(users_list)
 result_df, time_list_query = do_query()
 plots(time_list_write, time_list_delete, time_list_query)
