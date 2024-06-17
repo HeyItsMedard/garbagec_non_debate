@@ -14,7 +14,8 @@ def delete_query():
     with driver.session() as session:
         query = """
         MATCH (n)-[r]-()
-        DELETE n,r
+        DELETE r
+        DELETE n
         """
         session.run(query)
 
@@ -35,8 +36,8 @@ def where_kind_query():
         for record in result:
             print(record['n']['name'])
 
-    driver.close()
     end = time.time()
+    driver.close()
     print("Time taken to run WHERE query: ", end - start, " seconds.")
 
 def relation_query():
@@ -52,9 +53,9 @@ def relation_query():
             print(f"Manager: {record['m']['name']}")
             print(f"  Supervisor: {record['s']['name']}")
             print(f"    Salesperson: {record['sp']['name']}\n")
-
     driver.close()
     end = time.time()
+
     print("Time taken to run relation query: ", end - start, " seconds.")
 
 
@@ -72,4 +73,4 @@ Supervisor -Supervisor-> Salesperson (Azaz egy Supervisor felügyel egy Salesper
 if __name__ == "__main__":
     where_kind_query()
     relation_query()
-    # delete_query()
+    delete_query()
